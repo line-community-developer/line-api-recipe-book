@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<script>document.documentElement.classList.add("js")</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LINEでできること地図｜技術書典21 新刊</title>
+<meta name="description" content="メッセージに返事をする Bot から、地図アプリ、AI との英会話、IoT の防犯カメラまで。LINE API で作った5つの実装を、5人の著者が手順つきで紹介します。技術書典21 さ08（11/23 池袋）／オンライン 11/21〜12/6。">
+<!-- OGP：公開先（GitHub Pages）を変えたら og:url と og:image の URL を書き換える -->
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:site_name" content="LINE API Experts">
+<meta property="og:title" content="LINEでできること地図｜技術書典21 新刊">
+<meta property="og:description" content="メッセージに返事をする Bot から、地図アプリ、AI との英会話、IoT の防犯カメラまで。LINE API で作った5つの実装を、5人の著者が手順つきで紹介します。技術書典21 さ08（11/23 池袋）／オンライン 11/21〜12/6。">
+<meta property="og:url" content="https://line-community-developer.github.io/line-api-recipe-book/">
+<meta property="og:image" content="https://line-community-developer.github.io/line-api-recipe-book/images/ogp.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="LINEでできること地図 表紙と5色の Bot。技術書典21 さ08">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1e2740; --sub: #55607a; --paper: #f5ecdb; --land: #ebe0c6; --road: #fdf9f0;
+    --gas: #e06650; --liff: #d6a020; --azure: #3f8fd2; --aws: #5cc79a; --iot: #8b7bd8;
+    --river: #9cc8e6; --park: #b8dcae;
+  }
+  * { box-sizing: border-box; }
+  html, body { overflow-x: clip; }
+  body { margin: 0; font-family: "Zen Maru Gothic", sans-serif; color: var(--ink); background: var(--paper); line-height: 1.85; }
+  a { color: inherit; }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 0 24px; }
+  .unset { background: #fff3b0; border-bottom: 2px dashed var(--gas); padding: 0 4px; }
+  header.top { padding: 18px 0; font-weight: 700; font-size: 14px; letter-spacing: .04em; }
+
+  /* ヒーロー */
+  .hero { display: grid; grid-template-columns: 340px 1fr; gap: 48px; align-items: center; padding: 24px 24px 72px; }
+  .hero img { width: 100%; border: 3px solid var(--ink); border-radius: 6px; box-shadow: 10px 10px 0 var(--ink); transform: rotate(-2deg); }
+  .label { display: inline-block; background: var(--ink); color: var(--paper); padding: 2px 14px; border-radius: 999px; font-size: 13px; font-weight: 700; }
+  h1 { font-size: clamp(36px, 5.4vw, 54px); line-height: 1.15; margin: 14px 0 10px; font-weight: 900; }
+  .catch { font-size: 17px; font-weight: 700; color: var(--sub); margin: 0 0 18px; }
+  .btn { display: inline-block; background: var(--gas); color: #fff; text-decoration: none; font-weight: 900; padding: 12px 28px; border: 3px solid var(--ink); border-radius: 999px; box-shadow: 4px 4px 0 var(--ink); }
+  .btn:hover { transform: translate(2px,2px); box-shadow: 2px 2px 0 var(--ink); }
+
+  /* 地図の背景（道・公園・川） */
+  .map { position: relative; background: var(--land); border-top: 3px solid var(--ink); overflow: hidden; }
+  .map::before, .map::after { content: ""; position: absolute; background: var(--road); border: 3px solid var(--ink); z-index: 0; }
+  .map::before { left: 7%; top: -10px; bottom: -10px; width: 46px; border-radius: 30px; transform: rotate(2deg); }
+  .map::after { left: -10px; right: -10px; top: 46%; height: 42px; border-radius: 30px; transform: rotate(-1.5deg); }
+  .map .park { position: absolute; width: 160px; height: 90px; border-radius: 50%; background: var(--park); border: 3px solid var(--ink); right: 6%; top: 60px; z-index: 0; }
+  .map > .wrap { position: relative; z-index: 1; }
+  .river { height: 44px; background: var(--river); border-block: 3px solid var(--ink); }
+
+  section { padding: 64px 0; }
+  h2 { font-size: 30px; font-weight: 900; margin: 0 0 8px; }
+  .lead { color: var(--sub); font-weight: 700; margin: 0 0 28px; }
+
+  /* 裏表紙の「この本の地図」カード */
+  .legend { background: #fff; border: 3px solid var(--ink); border-radius: 22px; padding: 28px 32px; max-width: 640px; margin-left: auto; box-shadow: 8px 8px 0 rgba(30,39,64,.15); }
+  .legend h3 { margin: 0 0 16px; font-size: 22px; font-weight: 900; }
+  .legend ol { list-style: none; margin: 0; padding: 0; }
+  .legend li { display: grid; grid-template-columns: 44px 1fr; gap: 14px; padding: 12px 0; border-bottom: 2px dashed var(--land); }
+  .legend li:last-child { border-bottom: 0; }
+  .legend .pin { width: 36px; height: 48px; }
+  .legend b { font-size: 18px; display: block; line-height: 1.4; }
+  .legend .tag { font-size: 12px; font-weight: 700; color: var(--sub); }
+  .legend p { margin: 4px 0 0; font-size: 14px; }
+  .legend .by { font-size: 13px; color: var(--sub); font-weight: 700; }
+  .legend li.next b { color: var(--gas); }
+  details { margin-top: 12px; border-top: 2px solid var(--land); padding-top: 12px; }
+  summary { font-weight: 900; cursor: pointer; }
+
+  /* 対象読者 */
+  .readers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .reader { background: var(--road); border: 3px solid var(--ink); border-radius: 16px; padding: 18px; font-weight: 700; }
+  .reader .pin { width: 26px; height: 34px; display: block; margin-bottom: 6px; }
+
+  .facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .fact { background: var(--road); border: 3px solid var(--ink); border-radius: 14px; padding: 16px; }
+  .fact b { display: block; font-size: 13px; color: var(--sub); }
+
+  .authors { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; text-align: center; }
+  .author .face { display: block; width: 84px; height: 84px; margin: 0 auto 6px; }
+  .author b { display: block; }
+  .author small { color: var(--sub); font-size: 12px; }
+
+  dl.info { display: grid; grid-template-columns: 9em 1fr; margin: 0; background: var(--road); border: 3px solid var(--ink); border-radius: 14px; overflow: hidden; }
+  dl.info dt, dl.info dd { margin: 0; padding: 12px 18px; border-bottom: 2px solid var(--land); }
+  dl.info dt { font-weight: 900; background: #f8f1e2; }
+  h3.sub { margin: 32px 0 12px; font-size: 18px; }
+  .mapbox { border: 3px dashed var(--ink); border-radius: 14px; background: var(--road); padding: 32px; text-align: center; color: var(--sub); }
+
+  footer { text-align: center; padding: 64px 0 40px; }
+  footer .end { font-size: 30px; font-weight: 900; margin: 0 0 4px; }
+  footer p { margin: 0 0 24px; color: var(--sub); font-weight: 700; }
+  footer small { display: block; margin-top: 28px; color: var(--sub); }
+
+  /* ===== アニメーション ===== */
+  @keyframes float { 0%,100% { transform: rotate(-2deg) translateY(0); } 50% { transform: rotate(-1deg) translateY(-10px); } }
+  @keyframes drop { 0% { transform: translateY(-48px); opacity: 0; } 55% { transform: translateY(4px); opacity: 1; } 75% { transform: translateY(-3px); } 100% { transform: none; opacity: 1; } }
+  @keyframes rise { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
+  @keyframes walk { from { left: -90px; } to { left: calc(100% + 90px); } }
+  @keyframes bob { 0%,100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-6px) rotate(3deg); } }
+  @keyframes ping { 0% { box-shadow: 4px 4px 0 var(--ink), 0 0 0 0 rgba(224,102,80,.5); } 100% { box-shadow: 4px 4px 0 var(--ink), 0 0 0 16px rgba(224,102,80,0); } }
+  @keyframes wiggle { 0%,100% { transform: rotate(0); } 25% { transform: rotate(-12deg); } 75% { transform: rotate(12deg); } }
+
+  .hero img { animation: float 6s ease-in-out infinite; }
+  .hero > div > * { animation: rise .7s both; }
+  .hero > div > :nth-child(2) { animation-delay: .1s; }
+  .hero > div > :nth-child(3) { animation-delay: .2s; }
+  .hero > div > :nth-child(4) { animation-delay: .3s; }
+  .hero > div > :nth-child(5) { animation-delay: .4s; }
+  .hero .btn { animation: rise .7s .4s both, ping 2s 1.4s infinite; }
+
+  /* 道を歩く Bot（カードの後ろを通る） */
+  .walker { position: absolute; top: calc(46% - 52px); left: -90px; width: 72px; z-index: 1; animation: walk 22s linear infinite; pointer-events: none; }
+  .walker svg { display: block; width: 100%; animation: bob .6s ease-in-out infinite; }
+  .map > .wrap { z-index: 2; }
+
+  /* スクロールで出す（JS が有効なときだけ隠す） */
+  .js .reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s, transform .7s; transition-delay: calc(var(--i, 0) * .12s); }
+  .js .reveal.in { opacity: 1; transform: none; }
+  .js .legend li .pin { opacity: 0; }
+  .js .legend.in li .pin { animation: drop .7s both; animation-delay: calc(var(--i) * .18s + .2s); }
+  .legend li .pin { transform-origin: 50% 100%; }
+  .legend li:hover .pin { animation: wiggle .5s; }
+  .legend li.next .pin { filter: drop-shadow(0 0 0 transparent); }
+  .js .legend.in li.next b { animation: rise .6s 1.4s both; }
+  .author .face { transition: transform .2s; }
+  @keyframes sway { 0%,100% { transform: translateX(-8px) rotate(-6deg); } 50% { transform: translateX(8px) rotate(6deg); } }
+  .author .face { animation: sway 2.4s ease-in-out infinite; animation-delay: calc(var(--i) * -.5s); }
+  .reader:hover .pin { animation: wiggle .5s; transform-origin: 50% 100%; }
+
+  /* キャラクター */
+  @keyframes walkdown { from { top: -110px; } to { top: calc(100% + 20px); } }
+  @keyframes wave { 0%,100% { transform: translateX(-50%) rotate(-10deg); } 50% { transform: translateX(-50%) rotate(10deg); } }
+  @keyframes peek { 0%,35%,100% { transform: translateX(46px) rotate(0); } 50%,80% { transform: translateX(0) rotate(-14deg); } }
+  @keyframes hop { 0%,55%,100% { transform: none; } 25% { transform: translateY(-16px); } }
+  .walker.down { top: -110px; left: calc(7% - 8px); width: 62px; animation: walkdown 30s linear -12s infinite; }
+  .park .sitter { position: absolute; left: 50%; top: -42px; width: 58px; transform-origin: 50% 90%; animation: wave 1.6s ease-in-out infinite; }
+  .cover { position: relative; isolation: isolate; }
+  .cover img { position: relative; z-index: 1; }
+  .cover .peek { position: absolute; left: -44px; bottom: 60px; width: 74px; z-index: 0; transform-origin: 70% 80%; animation: peek 6s ease-in-out infinite; }
+  .parade { display: flex; justify-content: center; align-items: flex-end; gap: 10px; margin-bottom: 20px; }
+  .parade svg { width: 60px; height: 60px; animation: hop 1.8s ease-in-out infinite; animation-delay: calc(var(--i) * .15s); }
+  .parade .empty { width: 40px; height: 54px; }
+
+  /* 会場マップ */
+  @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(224,102,80,.6); } 100% { box-shadow: 0 0 0 18px rgba(224,102,80,0); } }
+  @keyframes bounce { 0%,100% { transform: translate(-50%, 0); } 50% { transform: translate(-50%, -6px); } }
+  .venue { border: 3px solid var(--ink); border-radius: 14px; background: #fff; padding: 16px; text-align: center; }
+  .venue-scroll { overflow-x: auto; }
+  .venue-map { position: relative; min-width: 640px; }
+  .venue-map img { display: block; width: 100%; }
+  .here { position: absolute; width: 22px; height: 22px; margin: -11px 0 0 -11px; border: 3px solid var(--gas); border-radius: 4px; animation: pulse 1.6s infinite; }
+  .here-label { position: absolute; left: 50%; bottom: calc(100% + 10px); transform: translateX(-50%); white-space: nowrap; background: var(--gas); color: #fff; font-weight: 900; font-size: 14px; padding: 2px 12px; border: 2px solid var(--ink); border-radius: 999px; animation: bounce 1.2s ease-in-out infinite; }
+  .here-label::after { content: ""; position: absolute; left: 50%; top: 100%; margin-left: -6px; border: 6px solid transparent; border-top-color: var(--ink); }
+  .zoom { display: inline-block; margin-top: 12px; font-weight: 900; font-size: 14px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    .js .reveal, .js .legend li .pin { opacity: 1; transform: none; }
+    .walker { display: none; }
+  }
+
+  @media (max-width: 720px) {
+    .walker { width: 56px; top: calc(46% - 42px); }
+    .cover { max-width: 280px; margin: 0 auto; }
+    .cover .peek { left: -34px; width: 60px; }
+    .map .park { width: 120px; height: 64px; top: 40px; right: -24px; }
+    .map section { padding-top: 120px; }
+    .parade { gap: 6px; }
+    .parade svg { width: 44px; height: 44px; }
+    .parade .empty { width: 30px; height: 40px; }
+    .hero { grid-template-columns: 1fr; }
+    .hero img { max-width: 300px; margin: 0 auto; }
+    .readers, .facts { grid-template-columns: 1fr; }
+    .authors { grid-template-columns: repeat(3, 1fr); }
+    .legend { padding: 22px 18px; }
+    dl.info { grid-template-columns: 1fr; }
+    dl.info dt { border-bottom: 0; padding-bottom: 0; }
+  }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute">
+  <symbol id="bot" viewBox="0 0 80 80"><g fill="currentColor" stroke="#1e2740" stroke-width="3"><ellipse cx="12" cy="42" rx="7" ry="11"/><ellipse cx="68" cy="42" rx="7" ry="11"/><ellipse cx="28" cy="73" rx="7" ry="5"/><ellipse cx="52" cy="73" rx="7" ry="5"/><circle cx="40" cy="44" r="28"/></g><circle cx="32" cy="40" r="3" fill="#1e2740"/><circle cx="48" cy="40" r="3" fill="#1e2740"/><ellipse cx="25" cy="49" rx="5" ry="3" fill="#eab0a0"/><ellipse cx="55" cy="49" rx="5" ry="3" fill="#eab0a0"/><path d="M34 49q6 5 12 0" fill="none" stroke="#1e2740" stroke-width="2.5" stroke-linecap="round"/></symbol>
+  <symbol id="botpin" viewBox="0 0 80 96"><path d="M40 4a10 10 0 0 1 10 10c0 7-10 16-10 16S30 21 30 14A10 10 0 0 1 40 4z" fill="#fff" stroke="#1e2740" stroke-width="3"/><circle cx="40" cy="14" r="3.5" fill="#1e2740"/><use href="#bot" x="0" y="16" width="80" height="80"/></symbol>
+  <symbol id="pin" viewBox="0 0 36 48"><path d="M18 45S3 28 3 18a15 15 0 0 1 30 0c0 10-15 27-15 27z" fill="currentColor" stroke="#1e2740" stroke-width="3"/><circle cx="18" cy="18" r="9" fill="#fff" stroke="#1e2740" stroke-width="2"/></symbol>
+</svg>
+
+<div class="wrap"><header class="top">LINE API Experts ／ 技術書典21 新刊</header></div>
+
+<div class="wrap hero">
+  <div class="cover"><img src="images/cover.png" alt="表紙：LINEでできること地図。地図の上に5つのピンと緑の丸い Bot"><svg class="peek" viewBox="0 0 80 80" style="color:var(--gas)" aria-hidden="true"><use href="#bot"/></svg></div>
+  <div>
+    <span class="label">新刊 ・ 技術書典21</span>
+    <h1>LINEで<br>できること地図</h1>
+    <p class="catch">GAS・LIFF・Azure・AWS・IoT<br>5つの実装で広がる LINE API</p>
+    <p>メッセージに返事をする Bot から、地図アプリ、AI との英会話、IoT の防犯カメラまで。LINE API で作った5つの実装を、5人の著者が手順つきで紹介します。</p>
+    <a class="btn" href="#info">頒布情報を見る</a>
+  </div>
+</div>
+
+
+<section>
+  <div class="wrap">
+    <h2>こんな人に</h2>
+    <p class="lead">コードをすべて理解できなくても、手順どおりに進めれば動くように書いています。</p>
+    <div class="readers">
+      <div class="reader"><svg class="pin" style="color:var(--gas)"><use href="#pin"/></svg>LINE は毎日使っているけれど、Bot を作ったことはない人</div>
+      <div class="reader"><svg class="pin" style="color:var(--liff)"><use href="#pin"/></svg>GAS や JavaScript を少し触ったことがあり、何か動くものを作ってみたい人</div>
+      <div class="reader"><svg class="pin" style="color:var(--iot)"><use href="#pin"/></svg>LINE API を使ったことがあり、生成 AI や IoT と組み合わせた例を知りたい人</div>
+    </div>
+  </div>
+</section>
+
+<section style="background:var(--land);border-block:3px solid var(--ink)">
+  <div class="wrap">
+    <h2>書いた人</h2>
+    <p class="lead">LINE Developer Community（LINE DC）の有志による執筆チーム「LINE API Experts」。各章の題材は、ハンズオンや LT で出た質問・作品から生まれました。</p>
+    <div class="authors">
+      <div class="author"><svg class="face" viewBox="0 0 80 80" style="color:var(--gas);--i:0" aria-hidden="true"><use href="#bot"/></svg><b>平野</b><small>GAS</small></div>
+      <div class="author"><svg class="face" viewBox="0 0 80 80" style="color:var(--liff);--i:1" aria-hidden="true"><use href="#bot"/></svg><b>しげる</b><small>LIFF ・ 編集</small></div>
+      <div class="author"><svg class="face" viewBox="0 0 80 80" style="color:var(--azure);--i:2" aria-hidden="true"><use href="#bot"/></svg><b>ひらりん</b><small>Azure</small></div>
+      <div class="author"><svg class="face" viewBox="0 0 80 80" style="color:var(--aws);--i:3" aria-hidden="true"><use href="#bot"/></svg><b>三浦</b><small>AWS</small></div>
+      <div class="author"><svg class="face" viewBox="0 0 80 80" style="color:var(--iot);--i:4" aria-hidden="true"><use href="#bot"/></svg><b>真理</b><small>IoT</small></div>
+    </div>
+  </div>
+</section>
+
+<section id="info">
+  <div class="wrap">
+    <h2>頒布情報</h2>
+    <p class="lead">会場とオンラインの両方で頒布します。</p>
+    <div class="facts" style="margin-bottom:24px">
+      <div class="fact"><b>オンライン</b>11月21日（土）〜12月6日（日）</div>
+      <div class="fact"><b>オフライン</b>11月23日（月・祝）11:00〜17:00</div>
+      <div class="fact"><b>スペース</b>さ08</div>
+    </div>
+    <dl class="info">
+      <dt>オンライン</dt><dd>2026年11月21日（土）〜12月6日（日）<br>技術書典オンラインマーケット</dd>
+      <dt>オフライン</dt><dd>2026年11月23日（月・祝）11:00〜17:00<br>池袋サンシャインシティ 展示ホールD</dd>
+      <dt>スペース</dt><dd>さ08（展示ホールD 左側の「さ」の列）</dd>
+    </dl>
+    <h3 class="sub">会場での頒布場所</h3>
+    <div class="venue">
+      <div class="venue-scroll">
+        <div class="venue-map">
+          <img src="images/venue-map.png" alt="技術書典21 オフライン会場の配置図。スペース さ08 は左側の「さ」の列にある">
+          <span class="here" style="left:22.65%;top:61.5%"><span class="here-label">さ08 ここ！</span></span>
+        </div>
+      </div>
+      <a class="zoom" href="images/venue-map.png" target="_blank" rel="noopener">地図を拡大</a>
+    </div>
+    <h3 class="sub">書籍情報</h3>
+    <dl class="info">
+      <dt>書名</dt><dd>LINEでできること地図</dd>
+      <dt>サブタイトル</dt><dd>5つの実装で広がる LINE API</dd>
+      <dt>初版発行</dt><dd>2026年11月23日</dd>
+      <dt>発行</dt><dd>LINE API Experts（LINE Developer Community）</dd>
+    </dl>
+  </div>
+</section>
+
+<footer class="wrap">
+  <div class="parade" aria-hidden="true">
+    <svg viewBox="0 0 80 80" style="color:var(--gas);--i:0"><use href="#bot"/></svg>
+    <svg viewBox="0 0 80 80" style="color:var(--liff);--i:1"><use href="#bot"/></svg>
+    <svg viewBox="0 0 80 80" style="color:var(--azure);--i:2"><use href="#bot"/></svg>
+    <svg viewBox="0 0 80 80" style="color:var(--aws);--i:3"><use href="#bot"/></svg>
+    <svg viewBox="0 0 80 80" style="color:var(--iot);--i:4"><use href="#bot"/></svg>
+    <svg class="empty" viewBox="0 0 36 48" style="color:var(--road);--i:5"><use href="#pin"/></svg>
+  </div>
+  <p class="end">次のピンは、あなたが立てる。</p>
+  <p>続きは、本書で。</p>
+  <a class="btn" href="https://x.com/intent/post?text=LINE%E3%81%A7%E3%81%A7%E3%81%8D%E3%82%8B%E3%81%93%E3%81%A8%E5%9C%B0%E5%9B%B3&url=https%3A%2F%2Fline-community-developer.github.io%2Fline-api-recipe-book%2F&hashtags=LINEAPIRecipeBook,linedc,%E6%8A%80%E8%A1%93%E6%9B%B8%E5%85%B821" target="_blank" rel="noopener">X でシェア #LINEAPIRecipeBook</a>
+  <small>© 2026 LINE Developer Community ・ <a href="#">表紙にもどる</a></small>
+</footer>
+<script>
+  // ピンの落下順と、スクロールで出す要素の設定
+  document.querySelectorAll(".legend li").forEach((li, i) => li.style.setProperty("--i", i));
+  const groups = [".hero ~ * h2", ".lead", ".reader", ".author", ".fact", "dl.info", ".mapbox", "h3.sub", "footer > *"];
+  groups.forEach(sel => document.querySelectorAll(sel).forEach((el, i) => {
+    el.classList.add("reveal");
+    if (/reader|author|fact|footer/.test(sel)) el.style.setProperty("--i", i);
+  }));
+  const io = new IntersectionObserver(entries => entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+  }), { threshold: .2 });
+  document.querySelectorAll(".reveal, .legend").forEach(el => io.observe(el));
+</script>
+</body>
+</html>

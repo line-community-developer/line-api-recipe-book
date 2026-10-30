@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>OGP 画像の元（1200×630）</title>
+<!-- images/ogp-1〜3.png はこの HTML を ?v=1〜3 で開き、1200×630 でスクリーンショットしたもの。書名や日程を変えたら撮り直す -->
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  :root { --ink: #1e2740; --sub: #55607a; --paper: #f5ecdb; --land: #ebe0c6; --road: #fdf9f0;
+    --gas: #e06650; --liff: #d6a020; --azure: #3f8fd2; --aws: #5cc79a; --iot: #8b7bd8; --river: #9cc8e6; --park: #b8dcae; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body { width: 1200px; height: 630px; overflow: hidden; background: var(--paper); font-family: "Zen Maru Gothic", sans-serif; color: var(--ink); }
+  .v { position: relative; width: 1200px; height: 630px; overflow: hidden; display: none; }
+  body[data-v="1"] .v1, body[data-v="2"] .v2, body[data-v="3"] .v3 { display: block; }
+  .abs { position: absolute; }
+  .label { display: inline-block; background: var(--ink); color: var(--paper); font-weight: 900; font-size: 24px; padding: 4px 22px; border-radius: 999px; }
+  .space { background: var(--gas); color: #fff; border: 3px solid var(--ink); border-radius: 10px; padding: 0 12px; }
+  .bot { width: 74px; height: 74px; }
+
+  /* ---- 1：表紙と情報 ---- */
+  .v1 .ground { left: 0; right: 0; bottom: 0; height: 150px; background: var(--land); border-top: 4px solid var(--ink); }
+  .v1 .river { left: -20px; right: -20px; bottom: 26px; height: 40px; background: var(--river); border-block: 4px solid var(--ink); transform: rotate(-1.2deg); }
+  .v1 .cover { left: 88px; top: 56px; width: 340px; border: 4px solid var(--ink); border-radius: 6px; box-shadow: 12px 12px 0 var(--ink); transform: rotate(-3deg); }
+  .v1 .text { left: 500px; top: 44px; right: 56px; }
+  .v1 h1 { margin: 14px 0 8px; font-size: 72px; line-height: 1.12; font-weight: 900; }
+  .v1 .sub { font-size: 26px; line-height: 1.5; font-weight: 700; color: var(--sub); margin: 0; }
+  .v1 .when { margin-top: 18px; font-size: 24px; font-weight: 900; line-height: 1.6; }
+  .v1 .when .space { margin-left: 6px; }
+  .v1 .bots { right: 60px; bottom: 74px; display: flex; gap: 10px; }
+  .v1 .bots svg:nth-child(odd) { transform: translateY(-10px) rotate(-6deg); }
+  .v1 .bots svg:nth-child(even) { transform: rotate(6deg); }
+
+  /* ---- 2：地図いっぱいに Bot ---- */
+  .v2 { background: var(--land); }
+  .v2 .road { background: var(--road); border: 4px solid var(--ink); border-radius: 40px; }
+  .v2 .block { background: var(--road); border: 4px solid var(--ink); border-radius: 18px; }
+  .v2 .park { background: var(--park); border: 4px solid var(--ink); border-radius: 50%; }
+  .v2 .river { left: -20px; right: -20px; bottom: 30px; height: 54px; background: var(--river); border-block: 4px solid var(--ink); transform: rotate(2deg); }
+  .v2 .card { left: 50%; top: 50%; transform: translate(-50%, -54%); width: 720px; background: #fff; border: 4px solid var(--ink); border-radius: 28px; padding: 30px 40px 32px; text-align: center; box-shadow: 10px 10px 0 rgba(30,39,64,.18); }
+  .v2 h1 { margin: 12px 0 6px; font-size: 80px; line-height: 1.08; font-weight: 900; }
+  .v2 .sub { margin: 0; white-space: nowrap; font-size: 22px; font-weight: 700; color: var(--sub); }
+  .v2 .when { margin-top: 14px; font-size: 24px; font-weight: 900; }
+  .v2 .pin { width: 46px; height: 62px; }
+
+  /* ---- 3：会場案内 ---- */
+  .v3 { background: var(--ink); color: var(--paper); }
+  .v3 .head { left: 64px; top: 48px; right: 64px; }
+  .v3 .head .label { background: var(--paper); color: var(--ink); }
+  .v3 .big { margin: 18px 0 0; font-size: 64px; font-weight: 900; line-height: 1.2; }
+  .v3 .big .space { font-size: 64px; padding: 0 18px; border-color: var(--paper); }
+  .v3 .date { margin: 10px 0 0; font-size: 28px; font-weight: 700; color: #c9cfe0; }
+  .v3 .mapcard { left: 64px; right: 300px; bottom: 48px; height: 230px; background: #fff; border: 4px solid var(--paper); border-radius: 20px; overflow: hidden; }
+  .v3 .mapcard img { position: absolute; width: 1300px; left: -6px; top: -82px; }
+  .v3 .mark { position: absolute; left: 272px; top: 115px; width: 30px; height: 30px; border: 5px solid var(--gas); border-radius: 6px; box-shadow: 0 0 0 8px rgba(224,102,80,.3); }
+  .v3 .mark span { position: absolute; left: 50%; bottom: calc(100% + 12px); transform: translateX(-50%); white-space: nowrap; background: var(--gas); color: #fff; font-weight: 900; font-size: 22px; padding: 2px 16px; border: 3px solid var(--ink); border-radius: 999px; }
+  .v3 .cover { right: 64px; bottom: 48px; width: 196px; border: 4px solid var(--paper); border-radius: 6px; transform: rotate(3deg); }
+  .v3 .title { right: 64px; top: 60px; text-align: right; font-size: 26px; font-weight: 900; color: var(--paper); line-height: 1.35; }
+  .v3 .bots { right: 268px; bottom: 260px; display: flex; gap: 4px; }
+  .v3 .bots .bot { width: 54px; height: 54px; }
+</style>
+</head>
+<body data-v="1">
+<svg width="0" height="0" style="position:absolute">
+  <symbol id="bot" viewBox="0 0 80 80"><g fill="currentColor" stroke="#1e2740" stroke-width="3"><ellipse cx="12" cy="42" rx="7" ry="11"/><ellipse cx="68" cy="42" rx="7" ry="11"/><ellipse cx="28" cy="73" rx="7" ry="5"/><ellipse cx="52" cy="73" rx="7" ry="5"/><circle cx="40" cy="44" r="28"/></g><circle cx="32" cy="40" r="3" fill="#1e2740"/><circle cx="48" cy="40" r="3" fill="#1e2740"/><ellipse cx="25" cy="49" rx="5" ry="3" fill="#eab0a0"/><ellipse cx="55" cy="49" rx="5" ry="3" fill="#eab0a0"/><path d="M34 49q6 5 12 0" fill="none" stroke="#1e2740" stroke-width="2.5" stroke-linecap="round"/></symbol>
+  <symbol id="pin" viewBox="0 0 36 48"><path d="M18 45S3 28 3 18a15 15 0 0 1 30 0c0 10-15 27-15 27z" fill="currentColor" stroke="#1e2740" stroke-width="3"/><circle cx="18" cy="18" r="9" fill="#fff" stroke="#1e2740" stroke-width="2"/></symbol>
+</svg>
+
+<!-- 1：表紙と情報 -->
+<div class="v v1">
+  <div class="abs ground"></div>
+  <div class="abs river"></div>
+  <img class="abs cover" src="images/cover.png" alt="">
+  <div class="abs text">
+    <span class="label">技術書典21 新刊</span>
+    <h1>LINEで<br>できること地図</h1>
+    <p class="sub">GAS・LIFF・Azure・AWS・IoT<br>5つの実装で広がる LINE API</p>
+    <div class="when">11/23（月・祝）池袋サンシャインシティ<span class="space">さ08</span><br>オンライン 11/21（土）〜12/6（日）</div>
+  </div>
+  <div class="abs bots">
+    <svg class="bot" viewBox="0 0 80 80" style="color:var(--gas)"><use href="#bot"/></svg>
+    <svg class="bot" viewBox="0 0 80 80" style="color:var(--liff)"><use href="#bot"/></svg>
+    <svg class="bot" viewBox="0 0 80 80" style="color:var(--azure)"><use href="#bot"/></svg>
+    <svg class="bot" viewBox="0 0 80 80" style="color:var(--aws)"><use href="#bot"/></svg>
+    <svg class="bot" viewBox="0 0 80 80" style="color:var(--iot)"><use href="#bot"/></svg>
+  </div>
+</div>
+
+<!-- 2：地図いっぱいに Bot -->
+<div class="v v2">
+  <div class="abs road" style="left:120px;top:-40px;width:60px;height:720px;transform:rotate(4deg)"></div>
+  <div class="abs road" style="left:1010px;top:-40px;width:60px;height:720px;transform:rotate(-3deg)"></div>
+  <div class="abs road" style="left:-40px;top:300px;width:1280px;height:56px;transform:rotate(-2deg)"></div>
+  <div class="abs block" style="left:20px;top:40px;width:80px;height:120px"></div>
+  <div class="abs park" style="left:1090px;top:60px;width:150px;height:96px"></div>
+  <div class="abs block" style="left:1100px;top:400px;width:120px;height:100px"></div>
+  <div class="abs river"></div>
+  <svg class="abs pin" style="left:30px;top:200px;color:var(--gas)"><use href="#pin"/></svg>
+  <svg class="abs pin" style="left:220px;top:40px;color:var(--liff)"><use href="#pin"/></svg>
+  <svg class="abs pin" style="left:930px;top:30px;color:var(--azure)"><use href="#pin"/></svg>
+  <svg class="abs pin" style="left:1120px;top:250px;color:var(--aws)"><use href="#pin"/></svg>
+  <svg class="abs pin" style="left:60px;top:430px;color:var(--iot)"><use href="#pin"/></svg>
+  <svg class="abs bot" viewBox="0 0 80 80" style="left:100px;top:250px;color:var(--gas);transform:rotate(-8deg)"><use href="#bot"/></svg>
+  <svg class="abs bot" viewBox="0 0 80 80" style="left:1110px;top:28px;color:var(--liff);transform:rotate(6deg)"><use href="#bot"/></svg>
+  <svg class="abs bot" viewBox="0 0 80 80" style="left:1000px;top:270px;color:var(--azure);transform:rotate(-6deg)"><use href="#bot"/></svg>
+  <svg class="abs bot" viewBox="0 0 80 80" style="left:200px;top:500px;color:var(--aws);transform:rotate(8deg)"><use href="#bot"/></svg>
+  <svg class="abs bot" viewBox="0 0 80 80" style="left:940px;top:500px;color:var(--iot);transform:rotate(-8deg)"><use href="#bot"/></svg>
+  <div class="abs card">
+    <span class="label">技術書典21 新刊 ・ LINE API Experts</span>
+    <h1>LINEで<br>できること地図</h1>
+    <p class="sub">GAS・LIFF・Azure・AWS・IoT　5つの実装で広がる LINE API</p>
+    <div class="when">11/23（月・祝）池袋 <span class="space">さ08</span>　／　オンライン 11/21〜12/6</div>
+  </div>
+</div>
+
+<!-- 3：会場案内 -->
+<div class="v v3">
+  <div class="abs head">
+    <span class="label">技術書典21 ・ 11/23（月・祝）池袋サンシャインシティ</span>
+    <p class="big">展示ホールD <span class="space">さ08</span> で<br>お待ちしています</p>
+    <p class="date">オンライン 11/21（土）〜12/6（日）</p>
+  </div>
+  <div class="abs mapcard">
+    <img src="images/venue-map.png" alt="">
+    <div class="mark"><span>さ08</span></div>
+  </div>
+  <div class="abs bots">
+    <svg class="bot" viewBox="0 0 80 80" style="color:var(--gas)"><use href="#bot"/></svg>
+    <svg class="bot" viewBox="0 0 80 80" style="color:var(--liff)"><use href="#bot"/></svg>
+    <svg class="bot" viewBox="0 0 80 80" style="color:var(--azure)"><use href="#bot"/></svg>
+  </div>
+  <img class="abs cover" src="images/cover.png" alt="">
+</div>
+
+<script>
+  const v = new URLSearchParams(location.search).get("v");
+  if (v) document.body.dataset.v = v;
+</script>
+</body>
+</html>
